@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_safe, require_http_methods, require_POST
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from .models import Article, Comment
 from .forms import ArticleForm, CommentForm
 
@@ -125,5 +125,7 @@ def likes(request, article_pk):
 
         }
 
-        return redirect('articles:index')
-    return redirect('accounts:login')
+        return JsonResponse(response_data)
+    # 에러를 일부러 발생
+    # 권한이 없음 401
+    return HttpResponse(status=401)
