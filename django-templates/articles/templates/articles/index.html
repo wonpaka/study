@@ -16,7 +16,7 @@
     <p>글 제목 : {{ article.title }}</p>
     <p>글 내용 : {{ article.content }}</p>
     <div>
-      {% comment %} <form action="{% url 'articles:likes' article.pk %}" method="POST"> {% endcomment %}
+      <!-- <form action="{% url 'articles:likes' article.pk %}" method="POST"> -->
       
       <form class='like-form' data-article-id="{{ article.pk }}">
         {% csrf_token %}
@@ -44,7 +44,7 @@
     const forms = document.querySelectorAll('.like-form')
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value
 
-
+    // querySelectorAll로 받았기에 foreach로 순회를 하는 것이다.
     forms.forEach(form => {
       form.addEventListener('submit', event => {
         event.preventDefault()

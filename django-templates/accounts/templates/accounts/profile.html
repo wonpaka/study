@@ -5,20 +5,28 @@
 
 {% with followings=person.followings.all followers=person.followers.all %}
   <div>
-    <div>
-      팔로잉 : {{ followings|length }} / 팔로워 : {{ followers|length }}
-    </div>
     {% if request.user != person %}
       <div>
-        <form action="{% url 'accounts:follow' person.pk %}" method="POST">
+        <!-- <form action="{% url 'accounts:follow' person.pk %}" method="POST"> -->
+
+        <form class='follow-form' data-follower-id="{{ person.pk }}">
           {% csrf_token %}
-          {% if request.user in followers %}
-            <button>언팔로우</button>
-          {% else %}
-            <button>팔로우</button>
-          {% endif %}
+          <button id="follow-btn-{{ person.pk }}">
+            {% if request.user in followers %}
+              언팔로우
+            {% else %}
+              팔로우
+            {% endif %}
+          </button>
+
         </form>
       </div>
+      <p>
+        <span>팔로잉 : {{ followings|length }}</span>
+        <span>팔로워 : </span>
+        <span id='follow-count-{{ person.pk }}'>{{ followers|length }}</span>
+      </p>
+
     {% endif %}
   </div>
 {% endwith %}
@@ -48,4 +56,43 @@
 <hr>
 
 <a href="{% url 'articles:index' %}">[back]</a>
+
+
+
+  <script>
+    const form = document.querySelector('.follow-form')
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value
+
+
+
+      form.addEventListener('submit', event => {
+        event.preventDefault()
+        // data-0000-id => dataset.0000Id 
+        const followerId = event.target.dataset.followerId
+        // axios.post(`/accounts/${followerId}/follow/`)
+
+        axios({
+          url: `/accounts/${followerId}/follow/`,
+          method: 'post',
+          headers: {
+            'X-CSRFToken' : csrfToken,
+          },
+        }).then((response) => {
+          const {followed, count} = response.data
+          const likeBtn = document.querySelector(`#follow-btn-${followerId}`)
+          likeBtn.innerText = followed ? '언팔로우' : '팔로우'
+
+          const likeCount = document.querySelector(`#follow-count-${followerId}`)
+          likeCount.innerText = count
+        }).catch((error) => {
+          if (error.response.status === 401) {
+            location.href = `/accounts/login/`
+          } else {
+            alert(error.response.statusText)
+          }
+        })
+      })
+    
+
+  </script>
 {% endblock %}
