@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cat API</title>
+  <style>
+    img {
+      height: 500px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cat API</h1>
+  <img src="" alt="Cat">
+  <br>
+  <button>Get Cat</button>
+  
+  <!-- axios CDN을 삽입한다. -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js">
+  </script>
+  <script>
+    // axios를 잘 불러오면 결국 전부이다.
+    // 결론은 Cat 버튼에 해당 이미지를 넣으면 된다.
+    const API_URI = 'https://api.thecatapi.com/v1/images/search'
+    
+    function getCat () {
+      axios.get(API_URI).then( function(response) { 
+        console.log('응답왔다!')
+        const imgURL = response.data[0].url
+        const img = document.querySelector('img')
+        // 연결해줌 (할당)/
+        img.setAttribute('src', imgURL)
+      })
+        
+      console.log('요청을 보냈다!')
+     
+    }
+
+    const button = document.querySelector('button')
+    button.addEventListener('click', getCat)
+    // 없으면 초기화면 엑박뜸
+    getCat()
+  </script>
+</body>
+</html>
