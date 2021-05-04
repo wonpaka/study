@@ -113,8 +113,17 @@ def likes(request, article_pk):
         # if request.user in article.like_users.all():
             # 좋아요 취소
             article.like_users.remove(request.user)
+            liked = False
         else:
             # 좋아요 누름
             article.like_users.add(request.user)
+            liked = True
+
+        response_data = {
+            'liked': liked,
+            'count': article.like_users.count(),
+
+        }
+
         return redirect('articles:index')
     return redirect('accounts:login')

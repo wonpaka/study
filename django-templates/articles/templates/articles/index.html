@@ -26,7 +26,9 @@
         {% endif %}
       </form>
     </div>
-    <p>{{ article.like_users.all|length }}명이 이 글을 좋아합니다.</p>
+    <p>
+      <span>{{ article.like_users.all|length }}명이 이 글을 좋아합니다.</span>
+    </p>
     <a href="{% url 'articles:detail' article.pk %}">[DETAIL]</a>
     <hr>
   {% endfor %}
@@ -43,9 +45,21 @@
         event.preventDefault()
         const articleId = event.target.dataset.articleId
         
-        axios.post(`/articles/${articleId}/likes/`) 
+        {% comment %} axios.post(`/articles/${articleId}/likes/`)  {% endcomment %}
+
+        axios({
+          url: `/articles/${articleId}/likes/`,
+          method: 'post',
+          headers: {
+            'X-CSRFToken' : csrfToken,
+          },
+        }).then(function(response) {
+          const {liked, count} = response.data
+          const likeBtn = document.querySelector(`#like-btn-${articleId}`)
+          likeBtn.innerText = liked ? '좋아요 취소' : '좋아요'
+        })
       })
     })
-    
+
   </script>
 {% endblock %}
