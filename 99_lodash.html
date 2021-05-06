@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <h1>점심</h1>
+    <button @click="pickOne">Pick</button>
+    <p> {{ choice }} </p>
+
+    <hr>
+    <h1>점심</h1>
+    <button @click="getLuckyNumbers">getLuckyNumbers</button>
+    <p> {{ luckyNumbers }} </p>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const app = new Vue({
+      //1. DOM과 data 연결
+      el: '#app',
+      data: {
+        menus: ['사과','배','바나나'],
+        choice: '',
+        luckyNumbers: '',
+      },
+      
+      methods: {
+        pickOne: function () {
+          const randomIndex = _.random(this.menus.length - 1)
+          this.choice = this.menus[randomIndex]
+        },
+        getLuckyNumbers: function () {
+          const numbers = _.range(1, 46)
+          this.luckyNumbers = _.sampleSize(numbers, 6)
+        }
+      }
+    })
+  </script>
+</body>
+</html>

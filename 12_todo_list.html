@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    img {
+      height: 500px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <select v-model="status">
+      <option value="all">전체</option>
+      <option value="inProgress">진행 중</option>
+      <option value="completed">완료</option>
+    </select>
+    <input type="text" v-model="content">
+    <button @click="addTodo">+</button>
+
+    <ul>
+      <li v-for="todo in todoList" :key="todo.date">
+        <input 
+          type="checkbox"
+          @click="toggleTodo(todo)"
+          :checked="todo.completed"
+        >
+        <span :class="{ completed: todo.completed }">{{ todo.content }}</span>
+      </li>
+    </ul>
+  </div>
+
+
+
+  <!-- Vue CDN 삽입 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  
+  <script>
+    // MVVM - ViewModel
+    const app = new Vue({
+      //1. DOM과 data 연결
+      el: '#app',
+      data: {
+        todoList: [],
+      },
+      methods: {
+        addTodo:function () {
+          const todo = {
+            content: this.content,
+            date: Date.now(),
+            completed: false,
+          }
+          
+          this.todoList.push(todo)
+          this.content = ''
+        },
+        toggleTodo: function (todo) {
+          todo.completed = !todo.completed
+        },
+        deleteCompleted: function () {
+          this.todoList = this.todoList.filter(todo => !todo.completed)
+        },
+      },
+      
+      watch: {
+        status: function () {
+          console.log('status가 바뀜')
+        }
+      },
+
+      computed: {
+        todoListByStatus: function () {
+          return this.todoList.filter(todo => {
+            if (this.status === 'inProgress') {
+              return !todo.completed // 완료하지 않았으면 true를 반환
+            } else if (this.status === 'completed') {
+              return todo.completed // 완료했으면 true를 반환
+            } else { // this.status === all
+              return true // 모든 아이템이 true를 반환
+            }
+          })
+        }
+      }
+
+
+    })
+  </script>
+</body>
+</html>
