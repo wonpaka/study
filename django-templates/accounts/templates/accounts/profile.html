@@ -79,11 +79,11 @@
           },
         }).then((response) => {
           const {followed, count} = response.data
-          const likeBtn = document.querySelector(`#follow-btn-${followerId}`)
-          likeBtn.innerText = followed ? '언팔로우' : '팔로우'
+          const followBtn = document.querySelector(`#follow-btn-${followerId}`)
+          followBtn.innerText = followed ? '언팔로우' : '팔로우'
 
-          const likeCount = document.querySelector(`#follow-count-${followerId}`)
-          likeCount.innerText = count
+          const followCount = document.querySelector(`#follow-count-${followerId}`)
+          followCount.innerText = count
         }).catch((error) => {
           if (error.response.status === 401) {
             location.href = `/accounts/login/`
